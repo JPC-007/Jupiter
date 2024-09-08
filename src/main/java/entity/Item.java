@@ -1,5 +1,6 @@
 package entity;
 
+import java.util.Objects;
 import java.util.Set;
 
 import org.json.JSONArray;
@@ -7,6 +8,23 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class Item {
+	@Override
+	public int hashCode() {
+		return Objects.hash(itemId);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Item other = (Item) obj;
+		return Objects.equals(itemId, other.itemId);
+	}
+
 	private String itemId;
 	private String name;
 	private double rating;

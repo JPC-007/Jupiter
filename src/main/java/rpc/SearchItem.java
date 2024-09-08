@@ -2,7 +2,9 @@ package rpc;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -38,27 +40,29 @@ public class SearchItem extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		JSONArray array = new JSONArray();
-		try {
-			double lat = Double.parseDouble(request.getParameter("lat"));
-			double lon = Double.parseDouble(request.getParameter("lon"));
-			String keyword = request.getParameter("term");
-			
-			DBConnection connection = DBConnectionFactory.getConnection();
-			List<Item> items = connection.searchItems(lat, lon, keyword);
-	 		connection.close();
+		double lat = Double.parseDouble(request.getParameter("lat"));
+		double lon = Double.parseDouble(request.getParameter("lon"));
+		// Term can be empty or null.
+		String term = request.getParameter("term");
 
+		DBConnection connection = DBConnectionFactory.getConnection();
+		List<Item> items = connection.searchItems(lat, lon, term);
+ 		connection.close();
+
+		List<JSONObject> list = new ArrayList<>();
+		try {
 			for (Item item : items) {
+				// Add a thin version of item object
 				JSONObject obj = item.toJSONObject();
-				array.put(obj);
+				list.add(obj);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		JSONArray array = new JSONArray(list);
 		RpcHelper.writeJsonArray(response, array);
-	}
 
+	}
 
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
