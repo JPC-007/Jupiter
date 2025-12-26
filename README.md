@@ -2,6 +2,8 @@
 
 A personalized event recommendation web application that helps users discover nearby events based on their location and preferences.
 
+English | [中文](README_CN.md)
+
 ## Features
 
 - **Event Search**: Search for events near your location using the TicketMaster API
